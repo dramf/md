@@ -1,0 +1,8 @@
+name: "md"
+repository: github.com/dramf/md
+version: "0.1.0"
+usage: scan targets into a markdown file
+description: |-
+  A Trivy plugin that scans and outputs the results to a markdown file
+platforms:
+
