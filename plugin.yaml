@@ -5,4 +5,7 @@ usage: scan targets into a markdown file
 description: |-
   A Trivy plugin that scans and outputs the results to a markdown file
 platforms:
-
+  - selector:
+      os: linux
+      arch: amd64
+    bin: ./md
