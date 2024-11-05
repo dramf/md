@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"golang.org/x/xerrors"
-	"log"
 	"os"
 	"text/template"
 )
@@ -12,7 +11,7 @@ import (
 func Format(tpl string, inputData []byte, outputFile string) error {
 	var output Output
 	if err := json.NewDecoder(bytes.NewReader(inputData)).Decode(&output); err != nil {
-		log.Fatalf("error decoding body: %v\n", err)
+		return xerrors.Errorf("error decoding body: %v\n", err)
 	}
 
 	tmpl, err := template.New("temp").Parse(tpl)
