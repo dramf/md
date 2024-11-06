@@ -27,5 +27,4 @@ changelog:
   filters:
     exclude:
       - "^docs:"
-      - "^test"
-      - "^formatter:"
+      - "^test:"
