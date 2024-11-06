@@ -1,4 +1,4 @@
-package main
+package formatter
 
 const githubTpl = `
 {{- if . }}
@@ -10,8 +10,7 @@ const githubTpl = `
 | Status | Library | Vulnerability ID | Severity | Installed Version | Fixed Version | Title | References |
 |--------|---------|------------------|----------|-------------------|---------------|-------|------------|
 {{- range .Vulnerabilities }}
-| ` + "`{{ .Library }}`" + `| {{ .Status }} | {{ .VulnerabilityID }} | {{ .Severity }} | {{ .InstalledVersion }} | {{ if .FixedVersion }}{{ .FixedVersion }}{{ else }} {{ end }} | {{ .Title }} | 
-  {{- range $index, $ref := .References }}{{ if $index }}, {{ end }}[{{ $ref }}]({{ $ref }}){{- end }} |
+| ` + "`{{ .Library }}`" + `| {{ .Status }} | {{ .VulnerabilityID }} | {{ .Severity }} | {{ .InstalledVersion }} | {{ if .FixedVersion }}{{ .FixedVersion }}{{ else }} {{ end }} | {{ .Title }} |{{- range $index, $ref := .References }}{{- if lt $index 3 }}{{ if $index }},<br>{{ end }}[{{ $ref }}]({{ $ref }}){{- end }}{{- end }} |
 {{- end }}
 {{- end }}
 
@@ -20,7 +19,7 @@ const githubTpl = `
 | ID | Title | Description | Severity | Message | Code |
 |----|-------|-------------|----------|---------|------|
 {{- range .Misconfigurations }}
-| {{ .ID }} |{{ .Title }} | {{ .Description }} | {{ .Severity }} | {{ .Message }} <br> See {{ .PrimaryURL }} | {{ if .CauseMetadata.Code.Lines }} <pre> {{- range .CauseMetadata.Code.Lines }}{{ .Number }} {{ .Content }} <br> {{- end }} </pre> {{- end }}|
+| {{ .ID }} |{{ .Title }} | {{ .Description }} | {{ .Severity }} | {{ .Message }} <br> See {{ .PrimaryURL }} | {{ if .CauseMetadata.Code.Lines }} <pre> {{- range .CauseMetadata.Code.Lines }}{{ .Number }} {{ .Content }}<br>{{- end }} </pre> {{- end }}|
 {{- end }}
 {{- end }}
 

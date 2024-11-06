@@ -1,14 +1,11 @@
 package main
 
 import (
+	"github.com/dramf/md/formatter"
 	"io"
 	"log"
 	"os"
-
-	"github.com/dramf/md/formatter"
 )
-
-const mdFile = "trivy-report.md"
 
 func main() {
 	inputData, err := io.ReadAll(os.Stdin)
@@ -16,10 +13,13 @@ func main() {
 		log.Fatalf("error reading trivy output: %v\n", err)
 	}
 
-	err = formatter.Format(githubTpl, inputData, mdFile)
+	f, err := formatter.NewFormatter()
+	if err != nil {
+		log.Fatalf("error initializing formatter: %v\n", err)
+	}
+
+	err = f.Format(inputData)
 	if err != nil {
 		log.Fatalf("error executing template: %v\n", err)
 	}
-
-	log.Printf("created Markdown file: %s\n", mdFile)
 }

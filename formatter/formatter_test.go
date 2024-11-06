@@ -7,26 +7,24 @@ import (
 	"testing"
 )
 
-const mdFile = "trivy-report.md"
-
 func TestFormatter(t *testing.T) {
 	tests := []struct {
-		name         string
-		goldenPath   string
-		templatePath string
-		jsonPath     string
+		name       string
+		goldenPath string
+		template   string
+		jsonPath   string
 	}{
 		{
-			name:         "happy all",
-			jsonPath:     "testdata/json/happy-all.json",
-			templatePath: "testdata/template/github.tpl",
-			goldenPath:   "testdata/golden/golden-all.md",
+			name:       "happy all",
+			jsonPath:   "testdata/input/happy-all.json",
+			template:   githubTpl,
+			goldenPath: "testdata/golden/golden-all.md",
 		},
 		{
-			name:         "happy empty",
-			jsonPath:     "testdata/json/happy-empty.json",
-			templatePath: "testdata/template/github.tpl",
-			goldenPath:   "testdata/golden/golden-empty.md",
+			name:       "happy empty",
+			jsonPath:   "testdata/input/happy-empty.json",
+			template:   githubTpl,
+			goldenPath: "testdata/golden/golden-empty.md",
 		},
 	}
 	for _, tt := range tests {
@@ -37,10 +35,12 @@ func TestFormatter(t *testing.T) {
 			data, err := os.ReadFile(tt.jsonPath)
 			assert.NoError(t, err)
 
-			template, err := os.ReadFile(tt.templatePath)
+			f, err := NewFormatter(
+				WithTemplate(tt.template),
+				WithOutputFile(filePath))
 			assert.NoError(t, err)
 
-			err = Format(string(template), data, filePath)
+			err = f.Format(data)
 			assert.NoError(t, err)
 
 			actual, err := os.ReadFile(filePath)
