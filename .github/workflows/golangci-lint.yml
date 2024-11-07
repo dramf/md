@@ -14,7 +14,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: 1.23.2
-
+        env:
+          GO111MODULE: off
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
