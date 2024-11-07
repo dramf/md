@@ -10,7 +10,7 @@ const githubTpl = `
 | Status | Library | Vulnerability ID | Severity | Installed Version | Fixed Version | Title | References |
 |--------|---------|------------------|----------|-------------------|---------------|-------|------------|
 {{- range .Vulnerabilities }}
-| ` + "`{{ .Library }}`" + `| {{ .Status }} | {{ .VulnerabilityID }} | {{ .Severity }} | {{ .InstalledVersion }} | {{ if .FixedVersion }}{{ .FixedVersion }}{{ else }} {{ end }} | {{ .Title }} |{{- range $index, $ref := .References }}{{- if lt $index 3 }}{{ if $index }},<br>{{ end }}[{{ $ref }}]({{ $ref }}){{- end }}{{- end }} |
+| ` + "`{{ .PkgName }}`" + `| {{ .Status }} | {{ .VulnerabilityID }} | {{ .Severity }} | {{ .InstalledVersion }} | {{ if .FixedVersion }}{{ .FixedVersion }}{{ else }} {{ end }} | {{ .Title }} |{{- range $index, $ref := .References }}{{- if lt $index 3 }}{{ if $index }},<br>{{ end }}[{{ $ref }}]({{ $ref }}){{- end }}{{- end }} |
 {{- end }}
 {{- end }}
 

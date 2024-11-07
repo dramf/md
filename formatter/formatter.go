@@ -3,8 +3,8 @@ package formatter
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/aquasecurity/trivy/pkg/types"
 	"golang.org/x/xerrors"
-	"log"
 	"os"
 	"text/template"
 )
@@ -13,18 +13,13 @@ const mdFile = "trivy-report.md"
 
 type Formatter struct {
 	outputFile string
-	template   *template.Template
+	template   string
 }
 
 func NewFormatter(options ...func(*Formatter)) (*Formatter, error) {
-	tmpl, err := template.New("temp").Parse(githubTpl)
-	if err != nil {
-		return nil, xerrors.Errorf("error parsing template: %v\n", err)
-	}
-
 	formatter := &Formatter{
 		outputFile: mdFile,
-		template:   tmpl,
+		template:   githubTpl,
 	}
 
 	for _, opt := range options {
@@ -41,16 +36,11 @@ func WithOutputFile(outputFile string) func(*Formatter) {
 
 func WithTemplate(t string) func(*Formatter) {
 	return func(formatter *Formatter) {
-		tmpl, err := template.New("temp").Parse(t)
-		if err != nil {
-			log.Println("error parsing template:", err)
-			return
-		}
-		formatter.template = tmpl
+		formatter.template = t
 	}
 }
 func (f *Formatter) Format(inputData []byte) error {
-	var output Output
+	var output types.Report
 	if err := json.NewDecoder(bytes.NewReader(inputData)).Decode(&output); err != nil {
 		return xerrors.Errorf("error decoding body: %v\n", err)
 	}
@@ -61,7 +51,12 @@ func (f *Formatter) Format(inputData []byte) error {
 	}
 	defer file.Close()
 
-	if err := f.template.Execute(file, output.Results); err != nil {
+	tmpl, err := template.New("temp").Parse(f.template)
+	if err != nil {
+		return xerrors.Errorf("error parsing template: %v\n", err)
+	}
+
+	if err := tmpl.Execute(file, output.Results); err != nil {
 		return xerrors.Errorf("error executing template: %v\n", err)
 	}
 	return nil
