@@ -29,9 +29,9 @@ func (m MarkdownGithubRenderer) RenderVulnerabilities(v []types.DetectedVulnerab
 		var references string
 		r := vulnerability.References
 		for i := range r {
-			references += fmt.Sprintf("%s", r[i])
+			references += r[i]
 			if i != maxReferences-1 && i != len(r)-1 {
-				references += fmt.Sprintf(", <br>")
+				references += ", <br>"
 			}
 			if i == maxReferences-1 {
 				break
