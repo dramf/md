@@ -1,2 +1,0 @@
-
-### Trivy Returned Empty Report

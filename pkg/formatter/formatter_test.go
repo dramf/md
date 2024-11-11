@@ -17,13 +17,11 @@ func TestFormatter(t *testing.T) {
 		{
 			name:       "happy all",
 			jsonPath:   "testdata/input/happy-all.json",
-			template:   githubTpl,
 			goldenPath: "testdata/golden/golden-all.md",
 		},
 		{
 			name:       "happy empty",
 			jsonPath:   "testdata/input/happy-empty.json",
-			template:   githubTpl,
 			goldenPath: "testdata/golden/golden-empty.md",
 		},
 	}
@@ -36,7 +34,6 @@ func TestFormatter(t *testing.T) {
 			assert.NoError(t, err)
 
 			f, err := NewFormatter(
-				WithTemplate(tt.template),
 				WithOutputFile(filePath))
 			assert.NoError(t, err)
 
