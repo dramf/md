@@ -1,7 +1,6 @@
 package formatter
 
 import (
-	"bytes"
 	"encoding/json"
 	"os"
 
@@ -44,8 +43,9 @@ func WithRenderer(r renderer.Renderer) func(*Formatter) {
 }
 func (f *Formatter) Format(inputData []byte) error {
 	var output types.Report
-	if err := json.NewDecoder(bytes.NewReader(inputData)).Decode(&output); err != nil {
-		return xerrors.Errorf("error decoding body: %v\n", err)
+	err := json.Unmarshal(inputData, &output)
+	if err != nil {
+		return xerrors.Errorf("failed to unmarshal JSON: %w", err)
 	}
 	var result string
 	if len(output.Results) == 0 {
@@ -59,7 +59,7 @@ func (f *Formatter) Format(inputData []byte) error {
 				f.renderer.RenderSecrets(r.Secrets)
 		}
 	}
-	err := os.WriteFile(f.outputFile, []byte(result), 0600)
+	err = os.WriteFile(f.outputFile, []byte(result), 0600)
 	if err != nil {
 		return xerrors.Errorf("error creating file: %v\n", err)
 	}
