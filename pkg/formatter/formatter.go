@@ -3,11 +3,13 @@ package formatter
 import (
 	"bytes"
 	"encoding/json"
+	"os"
+
 	"github.com/aquasecurity/trivy/pkg/types"
+	"golang.org/x/xerrors"
+
 	"github.com/dramf/md/pkg/renderer"
 	"github.com/dramf/md/pkg/renderer/github"
-	"golang.org/x/xerrors"
-	"os"
 )
 
 const mdFile = "trivy-report.md"
@@ -57,7 +59,7 @@ func (f *Formatter) Format(inputData []byte) error {
 				f.renderer.RenderSecrets(r.Secrets)
 		}
 	}
-	err := os.WriteFile(f.outputFile, []byte(result), 0644)
+	err := os.WriteFile(f.outputFile, []byte(result), 0600)
 	if err != nil {
 		return xerrors.Errorf("error creating file: %v\n", err)
 	}

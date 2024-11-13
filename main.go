@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/dramf/md/pkg/formatter"
 	"io"
 	"log"
 	"os"
+
+	"github.com/dramf/md/pkg/formatter"
 )
 
 func main() {

@@ -2,6 +2,7 @@ package github
 
 import (
 	"fmt"
+
 	"github.com/aquasecurity/trivy/pkg/types"
 )
 
@@ -63,7 +64,7 @@ func (m MarkdownGithubRenderer) RenderMisconfigurations(conf []types.DetectedMis
 		for _, line := range c.CauseMetadata.Code.Lines {
 			code += fmt.Sprintf("%d %s <br>", line.Number, line.Content)
 		}
-		if len(code) > 0 {
+		if code != "" {
 			code = fmt.Sprintf("<pre>%s</pre>", code)
 		}
 		misconfigurations += fmt.Sprintf("| %s | %s | %s | %s | %s | %s |\n",

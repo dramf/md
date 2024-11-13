@@ -1,10 +1,12 @@
 package formatter
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestFormatter(t *testing.T) {
@@ -15,14 +17,14 @@ func TestFormatter(t *testing.T) {
 		jsonPath   string
 	}{
 		{
-			name:       "happy all",
-			jsonPath:   "testdata/input/happy-all.json",
-			goldenPath: "testdata/golden/golden-all.md",
+			name:       "happy all github",
+			jsonPath:   "testdata/input/github/happy-all.json",
+			goldenPath: "testdata/golden/github/golden-all.md",
 		},
 		{
-			name:       "happy empty",
-			jsonPath:   "testdata/input/happy-empty.json",
-			goldenPath: "testdata/golden/golden-empty.md",
+			name:       "happy empty github",
+			jsonPath:   "testdata/input/github/happy-empty.json",
+			goldenPath: "testdata/golden/github/golden-empty.md",
 		},
 	}
 	for _, tt := range tests {
@@ -31,20 +33,20 @@ func TestFormatter(t *testing.T) {
 			filePath := filepath.Join(cacheDir, mdFile)
 
 			data, err := os.ReadFile(tt.jsonPath)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			f, err := NewFormatter(
 				WithOutputFile(filePath))
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			err = f.Format(data)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			actual, err := os.ReadFile(filePath)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			expected, err := os.ReadFile(tt.goldenPath)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			assert.Equal(t, string(expected), string(actual))
 		})
