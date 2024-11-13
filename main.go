@@ -1,17 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"os"
+
+	"github.com/dramf/md/pkg/formatter"
 )
 
 func main() {
 	inputData, err := io.ReadAll(os.Stdin)
 	if err != nil {
-		log.Fatalf("Error reading from stdin: %v\n", err)
+		log.Fatalf("error reading trivy output: %v\n", err)
 	}
 
-	fmt.Printf("Trivy output data: %s\n", inputData)
+	f, err := formatter.NewFormatter()
+	if err != nil {
+		log.Fatalf("error initializing formatter: %v\n", err)
+	}
+
+	err = f.Format(inputData)
+	if err != nil {
+		log.Fatalf("error executing template: %v\n", err)
+	}
 }
