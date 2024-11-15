@@ -9,14 +9,25 @@ env:
 
 jobs:
   unittest:
+    strategy:
+      matrix:
+        os: [ ubuntu-22.04, macos-12 ]
+        plugin-release:
+          - os: ubuntu-22.04
+            url: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_linux-amd64.tar.gz
+          - os: macos-12
+            url: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_darwin-arm64.tar.gz
     name: Test
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     steps:
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v0.2.2
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v4
@@ -28,6 +39,31 @@ jobs:
             echo "Run 'go mod tidy' and push it"
             exit 1
           fi
+      - name: Install plugin from repository
+        run: |
+          trivy plugin install github.com/dramf/md
+          trivy plugin info md
+          rm -rf ~/.trivy/plugins/md
+
+      - name: Install plugin from release
+        run: |
+          PLUGIN_URL=${{ matrix.plugin-release.url }}
+          curl -L $PLUGIN_URL -o md-plugin.tar.gz
+          tar -xzf md-plugin.tar.gz
+          mkdir -p ~/.trivy/plugins/md
+          mv md ~/.trivy/plugins/md/
+          cp plugin.yaml ~/.trivy/plugins/md/
+          trivy plugin info md
+          rm -rf ~/.trivy/plugins/md
+
+      - name: Install plugin from local file
+        run: |
+          go build ./
+          mkdir -p ~/.trivy/plugins/md
+          mv md ~/.trivy/plugins/md/
+          cp plugin.yaml ~/.trivy/plugins/md/
+          trivy plugin info md
+          rm -rf ~/.trivy/plugins/md
 
       - name: Run unit tests
         run: go test -v -short -timeout 30s -coverprofile=coverage.txt -covermode=atomic ./...
