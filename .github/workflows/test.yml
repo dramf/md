@@ -1,6 +1,5 @@
 name: Test
 on:
-  push:
   pull_request:
     branches:
       - main
@@ -37,11 +36,7 @@ jobs:
           fi
       - name: Install plugin from repository
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
           trivy plugin install github.com/dramf/md?ref=${{ github.event.pull_request.head.sha }}
-          else 
-          trivy plugin install github.com/dramf/md?ref=${{ github.sha }}
-          fi
           trivy plugin info md
           rm -rf ~/.trivy/plugins/md
 
@@ -49,8 +44,7 @@ jobs:
         run: |
           go build ./
           mkdir -p ~/.trivy/plugins/md
-          mv md ~/.trivy/plugins/md/
-          cp plugin.yaml ~/.trivy/plugins/md/
+          cp md plugin.yaml ~/.trivy/plugins/md/
           trivy plugin info md
           rm -rf ~/.trivy/plugins/md
 
