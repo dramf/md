@@ -37,7 +37,11 @@ jobs:
           fi
       - name: Install plugin from repository
         run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
           trivy plugin install github.com/dramf/md?ref=${{ github.event.pull_request.head.sha }}
+          else 
+          trivy plugin install github.com/dramf/md?ref=${{ github.sha }}
+          fi
           trivy plugin info md
           rm -rf ~/.trivy/plugins/md
 
