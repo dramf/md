@@ -1,6 +1,6 @@
 name: "md"
 repository: github.com/dramf/md
-version: "0.1.0"
+version: "0.1.1"
 usage: scan targets into a markdown file
 description: |-
   A Trivy plugin that scans and outputs the results to a markdown file
@@ -8,20 +8,20 @@ platforms:
   - selector:
       os: linux
       arch: amd64
-    uri: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_linux-amd64.tar.gz
+    uri: https://github.com/dramf/md/releases/download/v0.1.1/md_0.1.1_linux-amd64.tar.gz
     bin: ./md
   - selector:
       os: linux
       arch: arm64
-    uri: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_linux-arm64.tar.gz
+    uri: https://github.com/dramf/md/releases/download/v0.1.1/md_0.1.1_linux-arm64.tar.gz
     bin: ./md
   - selector:
       os: darwin
       arch: amd64
-    uri: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_darwin-amd64.tar.gz
+    uri: https://github.com/dramf/md/releases/download/v0.1.1/md_0.1.1_darwin-amd64.tar.gz
     bin: ./md
   - selector:
       os: darwin
       arch: arm64
-    uri: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_darwin-arm64.tar.gz
+    uri: https://github.com/dramf/md/releases/download/v0.1.1/md_0.1.1_darwin-arm64.tar.gz
     bin: ./md
