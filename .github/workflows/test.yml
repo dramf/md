@@ -37,7 +37,7 @@ jobs:
           fi
       - name: Install plugin from repository
         run: |
-          trivy plugin install github.com/dramf/md?ref=${{github.sha}}
+          trivy plugin install github.com/dramf/md?ref=$GITHUB_SHA
           trivy plugin info md
           rm -rf ~/.trivy/plugins/md
 
