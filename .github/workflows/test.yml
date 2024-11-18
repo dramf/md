@@ -12,11 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-22.04, macos-12 ]
-        plugin-release:
-          - os: ubuntu-22.04
-            url: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_linux-amd64.tar.gz
-          - os: macos-12
-            url: https://github.com/dramf/md/releases/download/v0.1.0/md_0.1.0_darwin-arm64.tar.gz
+
     name: Test
     runs-on: ${{ matrix.os }}
     steps:
@@ -41,18 +37,7 @@ jobs:
           fi
       - name: Install plugin from repository
         run: |
-          trivy plugin install github.com/dramf/md
-          trivy plugin info md
-          rm -rf ~/.trivy/plugins/md
-
-      - name: Install plugin from release
-        run: |
-          PLUGIN_URL=${{ matrix.plugin-release.url }}
-          curl -L $PLUGIN_URL -o md-plugin.tar.gz
-          tar -xzf md-plugin.tar.gz
-          mkdir -p ~/.trivy/plugins/md
-          mv md ~/.trivy/plugins/md/
-          cp plugin.yaml ~/.trivy/plugins/md/
+          trivy plugin install github.com/dramf/md?ref=${{github.sha}}
           trivy plugin info md
           rm -rf ~/.trivy/plugins/md
 
