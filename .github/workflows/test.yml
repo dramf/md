@@ -27,8 +27,6 @@ jobs:
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Go mod tidy
         run: |
@@ -39,7 +37,7 @@ jobs:
           fi
       - name: Install plugin from repository
         run: |
-          trivy plugin install github.com/dramf/md?ref=${{ github.sha }}
+          trivy plugin install github.com/dramf/md?ref=${{ github.event.pull_request.head.sha }}
           trivy plugin info md
           rm -rf ~/.trivy/plugins/md
 
