@@ -1,6 +1,5 @@
 name: Test
 on:
-  push:
   pull_request:
     branches:
       - main
@@ -9,14 +8,21 @@ env:
 
 jobs:
   unittest:
+    strategy:
+      matrix:
+        os: [ ubuntu-22.04, macos-12 ]
+
     name: Test
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     steps:
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v0.2.2
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v4
@@ -28,6 +34,19 @@ jobs:
             echo "Run 'go mod tidy' and push it"
             exit 1
           fi
+      - name: Install plugin from repository
+        run: |
+          trivy plugin install github.com/dramf/md?ref=${{ github.event.pull_request.head.sha }}
+          trivy plugin info md
+          rm -rf ~/.trivy/plugins/md
+
+      - name: Install plugin from local file
+        run: |
+          go build ./
+          mkdir -p ~/.trivy/plugins/md
+          cp md plugin.yaml ~/.trivy/plugins/md/
+          trivy plugin info md
+          rm -rf ~/.trivy/plugins/md
 
       - name: Run unit tests
         run: go test -v -short -timeout 30s -coverprofile=coverage.txt -covermode=atomic ./...
