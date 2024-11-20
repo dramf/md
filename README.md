@@ -1,5 +1,7 @@
 # md
 
+`md` is plugin for [Trivy output](https://trivy.dev/v0.57/docs/plugin/user-guide/#output-mode-support) to save report in `markdown` format
+
 ## Installation
 
 ```sh
